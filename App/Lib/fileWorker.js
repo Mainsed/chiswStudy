@@ -22,7 +22,7 @@ class fileWorker {
     async create(file) {
         const isExist = await this.checkFile(file);
         if (!isExist)
-            return await fs.writeFile(PATH + `/${file}.json`, JSON.stringify([]));
+            return await fs.writeFile(`${PATH}/${file}.json`, JSON.stringify([]));
     }
 
     async checkDir() {
@@ -38,39 +38,55 @@ class fileWorker {
         if (!isExist) return null;
         return this.getAll(entity).then((arr) => {
             const newArr = arr.filter(entry => entry.id !== id);
-            return fs.writeFile(PATH + `/${entity}.json`, JSON.stringify(newArr)).catch(console.log);
+            return fs.writeFile(`${PATH}/${entity}.json`, JSON.stringify(newArr))
+                .catch(console.log)
+                .then(()=>newArr);
         })
     }
 
     async get(entity, id) {
-        return this.getAll(entity).then((res)=>res.filter((ent) => ent.id === id)
-            .map((ent)=>Object.assign(ent, {created: true})))
+        return this.getAll(entity)
+            .then((res)=>res
+                .filter((ent) => ent.id === id)
+                .map((ent)=>Object.assign(ent, {created: true}))
+            )
     }
 
     async getAll(entity) {
         const isExist = await this.checkFile(entity);
-        if (!isExist) return null;
-        return fs.readFile(PATH + `/${entity}.json`)
+        if (!isExist) await this.createPath();
+        return fs.readFile(`${PATH}/${entity}.json`)
             .catch(console.log)
             .then((res) => JSON.parse(res.toString('utf-8')))
     }
 
+    async createPath(){
+        const dir = await this.createDir().catch((e) => console.log(e));
+        const file = await this.create(this.entityName).catch((e) => console.log(e));
+        return Promise.all([dir,file]);
+    }
+
     async createEntity(entity, data) {
-        await this.createDir().catch((e) => console.log(e));
-        await this.create(this.entityName).catch((e) => console.log(e));
+        await this.createPath();
         return this.getAll(entity).then((arr) => {
             const newArr = arr ? [...arr, data] : [data]
-            return fs.writeFile(PATH + `/${entity}.json`, JSON.stringify(newArr)).catch(console.log);
+            return fs.writeFile(`${PATH}/${entity}.json`, JSON.stringify(newArr))
+                .catch(console.log)
+                .then(()=> data)
         })
     }
 
     async updateEntity(entity, id, newContent) {
+        const isExist = await this.checkFile(entity);
+        if (!isExist) return null;
         return this.getAll(entity).then((arr) => {
             const newArr = arr.map((entity) => {
                 if (entity.id === id) return Object.assign({}, entity, newContent,{id:id})
                 return entity
             })
-            return fs.writeFile(PATH + `/${entity}.json`, JSON.stringify(newArr)).catch(console.log);
+            return fs.writeFile(`${PATH}/${entity}.json`, JSON.stringify(newArr))
+                .catch(console.log)
+                .then(()=>newContent);
         })
     }
 }
@@ -180,5 +196,6 @@ async function start2() {
 }
 
 
-start1();//v failah 1 post s id usera cotoriy bil udalen i 1 user2
+//start1();//v failah 1 post s id usera cotoriy bil udalen i 1 user2
 //start2();//v failah 1 post i 2 chela
+exports.fileWorker = fileWorker;
