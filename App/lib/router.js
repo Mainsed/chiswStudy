@@ -22,8 +22,8 @@ class Router {
     async handleRequest(req, res) {
         for (let i in this.body)
             if (req.method === this.body[i].method && req.url === this.body[i].url)
-                res = await this.body[i].handler(req.body)
-        return res;
+                res.data = await this.body[i].handler(req.body)
+        return res.data;
     }
 }
 

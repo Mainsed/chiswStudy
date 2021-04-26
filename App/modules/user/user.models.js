@@ -1,4 +1,4 @@
-const fileWorker = require('../../Lib/fileWorker').fileWorker
+const fileWorker = require('../../lib/fileWorker').fileWorker
 const uniqid = require('uniqid');
 const USERS = 'Users';
 
