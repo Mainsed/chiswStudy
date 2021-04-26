@@ -40,15 +40,15 @@ class fileWorker {
             const newArr = arr.filter(entry => entry.id !== id);
             return fs.writeFile(`${PATH}/${entity}.json`, JSON.stringify(newArr))
                 .catch(console.log)
-                .then(()=>newArr);
+                .then(() => newArr);
         })
     }
 
     async get(entity, id) {
         return this.getAll(entity)
-            .then((res)=>res
+            .then((res) => res
                 .filter((ent) => ent.id === id)
-                .map((ent)=>Object.assign(ent, {created: true}))
+                .map((ent) => Object.assign(ent, {created: true}))[0]
             )
     }
 
@@ -60,10 +60,10 @@ class fileWorker {
             .then((res) => JSON.parse(res.toString('utf-8')))
     }
 
-    async createPath(){
+    async createPath() {
         const dir = await this.createDir().catch((e) => console.log(e));
         const file = await this.create(this.entityName).catch((e) => console.log(e));
-        return Promise.all([dir,file]);
+        return Promise.all([dir, file]);
     }
 
     async createEntity(entity, data) {
@@ -72,7 +72,7 @@ class fileWorker {
             const newArr = arr ? [...arr, data] : [data]
             return fs.writeFile(`${PATH}/${entity}.json`, JSON.stringify(newArr))
                 .catch(console.log)
-                .then(()=> data)
+                .then(() => data)
         })
     }
 
@@ -81,12 +81,12 @@ class fileWorker {
         if (!isExist) return null;
         return this.getAll(entity).then((arr) => {
             const newArr = arr.map((entity) => {
-                if (entity.id === id) return Object.assign({}, entity, newContent,{id:id})
+                if (entity.id === id) return Object.assign({}, entity, newContent, {id: id})
                 return entity
             })
             return fs.writeFile(`${PATH}/${entity}.json`, JSON.stringify(newArr))
                 .catch(console.log)
-                .then(()=>newContent);
+                .then(() => newContent);
         })
     }
 }
@@ -142,18 +142,19 @@ class Post extends fileWorker {
             await this.updateEntity(entities.POSTS, this.id, {name: this.name})
         else await this.createEntity(entities.POSTS,
             {id: this.id, creatorId: this.creatorId, text: this.text})
-	this.created = true;
+        this.created = true;
         return this;
     }
 
     async delete() {
         super.deleteEntity(entities.POSTS, this.id);
-	return this;
+        return this;
     }
 
     getPost(id) {
         return super.get(entities.POSTS, id)
     }
+
     update(newData) {
         return Object.assign(this, newData)
     }

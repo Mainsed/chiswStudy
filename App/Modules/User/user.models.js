@@ -1,6 +1,5 @@
 const fileWorker = require('../../Lib/fileWorker').fileWorker
 const uniqid = require('uniqid');
-console.log(fileWorker);
 const USERS = 'Users';
 
 function UserModels() {
@@ -20,7 +19,6 @@ function UserModels() {
             return this.fileWorker.updateEntity(USERS, id, data)
         },
         delete: async ({id}) => {
-            console.log(id);
             return this.fileWorker.deleteEntity(USERS, id)
         }
     }
