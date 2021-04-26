@@ -7,7 +7,7 @@ function UserController() {
             return {
                 data,
                 statusCode: data ? 200 : 204,
-                statusMessage: data ? 'Successfully' : 'No content to show'
+                statusMessage: data ? http.STATUS_CODES['200'] : http.STATUS_CODES['204']
             }
         },
         findOne: async function (id) {
@@ -15,7 +15,7 @@ function UserController() {
             return {
                 data,
                 statusCode: data ? 200 : 204,
-                statusMessage: data ? 'Successfully' : "User doesn't exist"
+                statusMessage: data ? http.STATUS_CODES['200'] : http.STATUS_CODES['204']
             }
         },
         create: async function (name) {
@@ -23,7 +23,7 @@ function UserController() {
             return {
                 data,
                 statusCode: data ? 201 : 400,
-                statusMessage: data ? 'Successfully created' : 'Invalid data'
+                statusMessage: data ? http.STATUS_CODES['201'] : http.STATUS_CODES['400']
             }
         },
         update: async function (id, newContent) {
@@ -31,7 +31,7 @@ function UserController() {
             return {
                 data,
                 statusCode: data ? 200 : 204,
-                statusMessage: data ? 'Successfully updated' : "User doesn't exist"
+                statusMessage: data ? http.STATUS_CODES['200'] : http.STATUS_CODES['204']
             }
         },
         delete: async function (id) {
@@ -39,7 +39,7 @@ function UserController() {
             return {
                 data,
                 statusCode: data ? 200 : 204,
-                statusMessage: data ? 'Successfully deleted' : 'No content to delete'
+                statusMessage: data ? http.STATUS_CODES['200'] : http.STATUS_CODES['204']
             }
         }
     }

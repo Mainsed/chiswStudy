@@ -8,4 +8,5 @@ router.get('/users/all', controller().findAll)
 router.put('/users/create', controller().create)
 router.put('/users/update', controller().update)
 router.delete('/users/delete', controller().delete)
+
 exports.handleRequest = router.handleRequest.bind(router);
